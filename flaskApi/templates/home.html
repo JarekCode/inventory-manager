@@ -1,1 +1,37 @@
-<h1>Hello There!</h1>
+{% extends "signin_base.html" %}
+{% block content %}
+
+<div class="container">
+
+  <!-- Outer Row -->
+  <div class="row justify-content-center">
+    <div class="col-xl-10 col-lg-12 col-md-9">
+      <div class="card o-hidden border-0 shadow-lg my-5">
+        <div class="card-body p-0">
+          <!-- Nested Row within Card Body -->
+          <div class="row">
+            <div class="col-lg-6 d-none d-lg-block bg-home-image"></div>
+            <div class="col-lg-6">
+              <div class="p-5">
+                <div class="text-center">
+                  <h1 class="h4 text-gray-900 mb-4">Welcome To Jarek's Coffee!</h1>
+                </div>
+                <div class="text-center">
+                  <a class="btn btn-primary btn-user btn-block" href="{{ url_for('register') }}">Register</a>
+                </div>
+                <br>
+                <div class="text-center">
+                  <a class="btn btn-primary btn-user btn-block" href="{{ url_for('login') }}">Login</a>
+                </div>
+                <br><hr>
+                <p>This is a template containing the following:<br>- Register<br>- Login<br>- Password Reset<br>- Admin Dashboard</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
