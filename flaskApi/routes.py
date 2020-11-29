@@ -182,7 +182,152 @@ def reset_token(token):
   # Return
   return render_template('signin_reset_password.html', page_title = 'Reset Password', form = form)
 
+#------#
+# Home #
+#------#
+
 # Home
 @app.route('/')
 def home():
-  return render_template('home.html', page_title = 'Home')
+  if(current_user.is_authenticated):
+    # Return studentHome
+    if(current_user.role == 'admin'):
+      return redirect(url_for('adminHome'))
+    # Return instructor
+    # elif(current_user.role == 'employee'):
+    #   return redirect(url_for('employeeHome'))
+    # Return Access Pending if a new user was not yet approved by an admin
+    elif(current_user.role == 'pending'):
+      return render_template('accessPending.html', page_title = 'Access Pending')
+    elif(current_user.role == 'deactivated'):
+      return render_template('accessDeactivated.html', page_title = 'Account Deactivated')
+    
+  else:
+    # Return unauthenticated
+    return render_template('home.html', page_title = 'Home')
+
+# Admin Home
+@app.route('/admin')
+@login_required
+def adminHome():
+  # Check if the person logged in is an admin
+  if(current_user.role != 'admin'):
+    return render_template('accessDenied.html', page_title = 'Access Denied')
+  # Return adminHome
+  return render_template('admin_home.html', page_title = 'Home')
+
+# Admin Profile
+@app.route('/admin/profile')
+@login_required
+def adminProfile():
+  # Check if the person logged in is an admin
+  if(current_user.role != 'admin'):
+    return render_template('accessDenied.html', page_title = 'Access Denied')
+  
+  image_file = url_for('static', filename='profile_pictures/' + current_user.image_file)
+  # Return adminProfile
+  return render_template('admin_profile.html', page_title = 'My Profile', image_file = image_file)
+
+# Manage accounts
+@app.route('/admin/accounts')
+@login_required
+def adminAccounts():
+  # Check if the person logged in is an admin
+  if(current_user.role != 'admin'):
+    return render_template('accessDenied.html', page_title = 'Access Denied')
+  
+  # Get all people in the application (1. admins, 2. employees, 3. pending, 4. deactivated)
+  allAdmins = User.query.filter_by(role='admin').all()
+  allEmployees = User.query.filter_by(role='employee').all()
+  allPending = User.query.filter_by(role='pending').all()
+  allDeactivated = User.query.filter_by(role='deactivated').all()
+
+  # Replace the hashed passwords with 'N/A' and replace image_file with img link
+  for i in allAdmins:
+    i.password = i.password.replace(i.password, 'N/A')
+    i_m = url_for('static', filename='profile_pictures/' + i.image_file)
+    i.image_file = i_m
+  for i in allEmployees:
+    i.password = i.password.replace(i.password, 'N/A')
+    i_m = url_for('static', filename='profile_pictures/' + i.image_file)
+    i.image_file = i_m
+  for i in allPending:
+    i.password = i.password.replace(i.password, 'N/A')
+    i_m = url_for('static', filename='profile_pictures/' + i.image_file)
+    i.image_file = i_m
+  for i in allDeactivated:
+    i.password = i.password.replace(i.password, 'N/A')
+    i_m = url_for('static', filename='profile_pictures/' + i.image_file)
+    i.image_file = i_m
+
+  # Return
+  return render_template('admin_accounts.html', allAdmins = allAdmins, allEmployees = allEmployees, allPending = allPending, allDeactivated = allDeactivated, page_title = 'Accounts')
+
+# Change role of an account
+@app.route('/admin/accounts/<email_address>/changeRole/<new_role>')
+@login_required
+def adminAccountsChangeRole(email_address, new_role):
+  # Check if the person logged in is an admin
+  if(current_user.role != 'admin'):
+    return render_template('accessDenied.html', page_title = 'Access Denied')
+
+  # Check if the user email exists in db
+  user = User.query.filter_by(email=email_address).first()
+  if(user is None):
+    flash(f'"{email_address}" does not exist in the database', 'danger')
+    return redirect(url_for('adminAccounts'))
+  # Check if the role is ['admin' or 'employee' or 'deactivated']
+  validRoles = ['admin', 'employee', 'deactivated']
+  if(new_role not in validRoles):
+    flash(f'"{new_role}" is not valid. Valid Roles: "admin", "employee", "deactivated".', 'danger')
+    return redirect(url_for('adminAccounts'))
+  # Update user role
+  user.role = new_role
+  db.session.add(user)
+  db.session.commit()
+  # Return redirect
+  flash(f'"{email_address}" role updated to "{new_role}"', 'success')
+  return redirect(url_for('adminAccounts'))
+
+# Delete user from the database
+@app.route('/admin/accounts/<email_address>/deleteUser')
+@login_required
+def adminAccountsDeleteUser(email_address):
+  # Check if the person logged in is an admin
+  if(current_user.role != 'admin'):
+    return render_template('accessDenied.html', page_title = 'Access Denied')
+
+  # Check if the user email exists in db
+  user = User.query.filter_by(email=email_address).first()
+  if(user is None):
+    flash(f'"{email_address}" does not exist in the database.', 'danger')
+    return redirect(url_for('adminAccounts'))
+  # Delete user
+  userToDelete = User.query.filter_by(email=email_address).first()
+  db.session.delete(userToDelete)
+  db.session.commit()
+  # Return redirect
+  flash(f'"{email_address}" user has been deleted.', 'success')
+  return redirect(url_for('adminAccounts'))
+'''
+admin
+- view pending users
+- approve pending users
+- deny pending users
+
+- view all users
+- deactivate users
+- re-activate users
+- delete users
+
+- view inventory
+- view logs
+- view transactions
+
+employee
+- view inventory
+- add items
+- remove items
+- update items
+- view my transactions
+'''

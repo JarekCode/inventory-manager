@@ -1,0 +1,32 @@
+{% extends "admin_base.html" %}
+{% block content %}
+
+<div class="container">
+  <!-- Outer Row -->
+  <div class="row justify-content-center">
+    <div class="col-xl-10 col-lg-12 col-md-9">
+      <div class="card o-hidden border-0 shadow-lg my-5">
+        <div class="card-body p-0">
+          <!-- Nested Row within Card Body -->
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="p-5">
+                <div class="text-center">
+                  <img class="rounded-circle account-img" src="{{ image_file }}" width="100" height="100">
+                  <br><br>
+                  <h1 class="h4 text-gray-900">{{ current_user.first_name }} {{ current_user.last_name }}</h1>
+                </div>
+                <hr>
+                <div class="text-center">
+                  <p><strong>Role:</strong> {{ current_user.role }} | <strong>Email:</strong> {{ current_user.email }} | <strong>Registered:</strong> {{ current_user.date_created.strftime("%d") }} {{ current_user.date_created.strftime("%b") }} {{ current_user.date_created.strftime("%Y") }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

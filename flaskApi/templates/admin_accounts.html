@@ -1,0 +1,159 @@
+{% extends "admin_base.html" %}
+{% block content %}
+
+<br>
+<div class="text-center">
+  <h2>Pending</h2>
+</div>
+{% for i in allPending %}
+<div class="container">
+  <!-- Outer Row -->
+  <div class="row justify-content-center">
+    <div class="col-xl-10 col-lg-12 col-md-9">
+      <div class="card o-hidden border-0 shadow-lg my-5">
+        <div class="card-body p-0">
+          <!-- Nested Row within Card Body -->
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="p-5">
+                <div class="text-center">
+                  <img class="rounded-circle account-img" src="{{ i.image_file }}" width="100" height="100">
+                  <br><br>
+                  <h1 class="h4 text-gray-900">{{ i.first_name }} {{ i.last_name }}</h1>
+                </div>
+                <hr>
+                <div class="text-center">
+                  <p><strong>Role:</strong> {{ i.role }} | <strong>Email:</strong> {{ i.email }} | <strong>Registered:</strong> {{ i.date_created.strftime("%d") }} {{ i.date_created.strftime("%b") }} {{ i.date_created.strftime("%Y") }}</p>
+                </div>
+                <div class="text-center">
+                  <a class="btn btn-outline-success mt-1" role="button" href="{{ url_for('adminAccountsChangeRole', email_address = i.email, new_role = 'employee') }}">Accept</a>
+                  <a class="btn btn-outline-danger mt-1" role="button" href="{{ url_for('adminAccountsDeleteUser', email_address = i.email) }}">Delete Account</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+<br><hr><br>
+<div class="text-center">
+  <h2>Admins</h2>
+</div>
+{% for i in allAdmins %}
+<div class="container">
+  <!-- Outer Row -->
+  <div class="row justify-content-center">
+    <div class="col-xl-10 col-lg-12 col-md-9">
+      <div class="card o-hidden border-0 shadow-lg my-5">
+        <div class="card-body p-0">
+          <!-- Nested Row within Card Body -->
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="p-5">
+                <div class="text-center">
+                  <img class="rounded-circle account-img" src="{{ i.image_file }}" width="100" height="100">
+                  <br><br>
+                  <h1 class="h4 text-gray-900">{{ i.first_name }} {{ i.last_name }}</h1>
+                </div>
+                <hr>
+                <div class="text-center">
+                  <p><strong>Role:</strong> {{ i.role }} | <strong>Email:</strong> {{ i.email }} | <strong>Registered:</strong> {{ i.date_created.strftime("%d") }} {{ i.date_created.strftime("%b") }} {{ i.date_created.strftime("%Y") }}</p>
+                </div>
+                <div class="text-center">
+                  <a class="btn btn-outline-dark mt-1" role="button" href="{{ url_for('adminAccountsChangeRole', email_address = i.email, new_role = 'employee') }}">Make Employee</a>
+                  <a class="btn btn-outline-info mt-1" role="button" href="{{ url_for('adminAccountsChangeRole', email_address = i.email, new_role = 'deactivated') }}">Deactivate Account</a>
+                  <a class="btn btn-outline-danger mt-1" role="button" href="{{ url_for('adminAccountsDeleteUser', email_address = i.email) }}">Delete Account</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+<br><hr><br>
+<div class="text-center">
+  <h2>Employees</h2>
+</div>
+{% for i in allEmployees %}
+<div class="container">
+  <!-- Outer Row -->
+  <div class="row justify-content-center">
+    <div class="col-xl-10 col-lg-12 col-md-9">
+      <div class="card o-hidden border-0 shadow-lg my-5">
+        <div class="card-body p-0">
+          <!-- Nested Row within Card Body -->
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="p-5">
+                <div class="text-center">
+                  <img class="rounded-circle account-img" src="{{ i.image_file }}" width="100" height="100">
+                  <br><br>
+                  <h1 class="h4 text-gray-900">{{ i.first_name }} {{ i.last_name }}</h1>
+                </div>
+                <hr>
+                <div class="text-center">
+                  <p><strong>Role:</strong> {{ i.role }} | <strong>Email:</strong> {{ i.email }} | <strong>Registered:</strong> {{ i.date_created.strftime("%d") }} {{ i.date_created.strftime("%b") }} {{ i.date_created.strftime("%Y") }}</p>
+                </div>
+                <div class="text-center">
+                  <a class="btn btn-outline-dark mt-1" role="button" href="{{ url_for('adminAccountsChangeRole', email_address = i.email, new_role = 'admin') }}">Make Admin</a>
+                  <a class="btn btn-outline-info mt-1" role="button" href="{{ url_for('adminAccountsChangeRole', email_address = i.email, new_role = 'deactivated') }}">Deactivate Account</a>
+                  <a class="btn btn-outline-danger mt-1" role="button" href="{{ url_for('adminAccountsDeleteUser', email_address = i.email) }}">Delete Account</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+<br><hr><br>
+<div class="text-center">
+  <h2>Deactivated</h2>
+</div>
+{% for i in allDeactivated %}
+<div class="container">
+  <!-- Outer Row -->
+  <div class="row justify-content-center">
+    <div class="col-xl-10 col-lg-12 col-md-9">
+      <div class="card o-hidden border-0 shadow-lg my-5">
+        <div class="card-body p-0">
+          <!-- Nested Row within Card Body -->
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="p-5">
+                <div class="text-center">
+                  <img class="rounded-circle account-img" src="{{ i.image_file }}" width="100" height="100">
+                  <br><br>
+                  <h1 class="h4 text-gray-900">{{ i.first_name }} {{ i.last_name }}</h1>
+                </div>
+                <hr>
+                <div class="text-center">
+                  <p><strong>Role:</strong> {{ i.role }} | <strong>Email:</strong> {{ i.email }} | <strong>Registered:</strong> {{ i.date_created.strftime("%d") }} {{ i.date_created.strftime("%b") }} {{ i.date_created.strftime("%Y") }}</p>
+                </div>
+                <div class="text-center">
+                  <a class="btn btn-outline-dark mt-1" role="button" href="{{ url_for('adminAccountsChangeRole', email_address = i.email, new_role = 'employee') }}">Make Employee</a>
+                  <a class="btn btn-outline-dark mt-1" role="button" href="{{ url_for('adminAccountsChangeRole', email_address = i.email, new_role = 'admin') }}">Make Admin</a>
+                  <a class="btn btn-outline-danger mt-1" role="button" href="{{ url_for('adminAccountsDeleteUser', email_address = i.email) }}">Delete Account</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+{% endblock content %}
